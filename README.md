@@ -1,0 +1,3 @@
+## This application is a storage service project, inspired by Dropbox
+
+Status: WIP...
