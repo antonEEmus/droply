@@ -13,11 +13,14 @@
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.5.2",
     "@gravity-ui/icons": "^2.18.0",
     "@heroui/react": "^3.1.0",
     "@heroui/styles": "^3.1.0",
     "@libsql/client": "^0.17.3",
     "@tailwindcss/postcss": "^4.3.0",
+    "@tanstack/react-form": "^1.33.0",
+    "@tanstack/react-form-nextjs": "^1.33.0",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
     "next": "16.2.9",
