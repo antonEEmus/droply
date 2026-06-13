@@ -6,7 +6,6 @@ import { Moon, Sun } from "@gravity-ui/icons";
 
 export function ThemeSwitch() {
   const { theme, setTheme } = useTheme();
-  console.log(theme);
 
   return (
     <div className="flex flex-row gap-0 self-end">

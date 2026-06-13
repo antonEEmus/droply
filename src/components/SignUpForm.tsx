@@ -2,11 +2,19 @@
 import { useSignUp } from "@clerk/nextjs";
 import { signUpSchema } from "../schemas";
 import { FormEvent, useState } from "react";
-import { FieldError, Form, Input, Label, TextField } from "@heroui/react";
+import {
+  Button,
+  FieldError,
+  Form,
+  Input,
+  Label,
+  TextField,
+} from "@heroui/react";
 import { EMAIL_PLACEHOLDER } from "../constants";
 import { useForm } from "@tanstack/react-form";
 import { useAppForm } from "../forms";
 import z from "zod";
+import { Check } from "@gravity-ui/icons";
 
 type SignUpFormValues = z.infer<typeof signUpSchema>;
 
@@ -20,6 +28,7 @@ export function SignUpForm() {
       password: "",
     },
     onSubmit: ({ value }) => {
+      debugger;
       console.log(value);
     },
   });
@@ -28,7 +37,14 @@ export function SignUpForm() {
   // const [verifying, setVerifying] = useState(false);
 
   return (
-    <Form onSubmit={form.handleSubmit}>
+    <Form
+      onSubmit={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        form.handleSubmit();
+      }}
+      className="flex flex-col gap-2"
+    >
       <Field
         name="email"
         children={({ state, handleChange, handleBlur }) => (
@@ -54,11 +70,20 @@ export function SignUpForm() {
             value={state.value}
           >
             <Label>Password</Label>
-            <Input placeholder={EMAIL_PLACEHOLDER} />
+            <Input />
             <FieldError />
           </TextField>
         )}
       />
+      <div className="flex gap-2">
+        <Button type="submit">
+          <Check />
+          Submit
+        </Button>
+        <Button type="reset" variant="secondary">
+          Reset
+        </Button>
+      </div>
     </Form>
   );
 }
