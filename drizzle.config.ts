@@ -6,7 +6,7 @@ if (!process.env.DB_CONNECTION_URL || !process.env.DB_AUTH_TOKEN) {
 }
 
 export default defineConfig({
-  schema: "./app/db/schema.ts",
+  schema: "./src/db/schema.ts",
   out: "./drizzle",
   dialect: "turso",
   dbCredentials: {

@@ -1,6 +1,6 @@
 "use client";
 
-import { ToggleButton } from "@heroui/react";
+import { Card, CardTitle, ToggleButton } from "@heroui/react";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "@gravity-ui/icons";
 
@@ -9,10 +9,10 @@ export function ThemeSwitch() {
   console.log(theme);
 
   return (
-    <div>
+    <div className="flex flex-row gap-0 self-end">
       <ToggleButton
         isSelected={theme === "light"}
-        onPointerDown={() => setTheme("light")}
+        onPress={() => setTheme("light")}
         id="light"
       >
         Light
@@ -20,7 +20,7 @@ export function ThemeSwitch() {
       </ToggleButton>
       <ToggleButton
         isSelected={theme === "dark"}
-        onPointerDown={() => setTheme("dark")}
+        onPress={() => setTheme("dark")}
         id="dark"
       >
         Dark
