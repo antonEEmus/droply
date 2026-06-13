@@ -1,9 +1,8 @@
 "use client";
-import { useSignUp } from "@clerk/nextjs";
-import { signUpSchema } from "../schemas";
-import { FormEvent, useState } from "react";
+import { signUpSchema, SignUpValues } from "../schemas";
 import {
   Button,
+  ErrorMessage,
   FieldError,
   Form,
   Input,
@@ -11,79 +10,84 @@ import {
   TextField,
 } from "@heroui/react";
 import { EMAIL_PLACEHOLDER } from "../constants";
-import { useForm } from "@tanstack/react-form";
-import { useAppForm } from "../forms";
-import z from "zod";
+import { FieldErrors, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Check } from "@gravity-ui/icons";
-
-type SignUpFormValues = z.infer<typeof signUpSchema>;
+import { useState } from "react";
 
 export function SignUpForm() {
-  const form = useForm({
-    validators: {
-      onChange: signUpSchema,
-    },
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-    onSubmit: ({ value }) => {
-      debugger;
-      console.log(value);
-    },
+  const defaultValues: SignUpValues = {
+    email: "",
+    password: "",
+    passwordConfirmation: "",
+  };
+  const form = useForm<SignUpValues>({
+    defaultValues,
+    resolver: zodResolver(signUpSchema),
   });
-  const { Field } = form;
+  const { register, handleSubmit, formState } = form;
 
-  // const [verifying, setVerifying] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+
+  const onSubmit = async (values: SignUpValues) => {
+    console.log("Successfully submitted values: ", values);
+  };
+
+  const onError = (errors: FieldErrors<SignUpValues>) => {
+    console.log("Errors found preventing submit:", errors);
+  };
 
   return (
     <Form
-      onSubmit={(e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        form.handleSubmit();
-      }}
+      onSubmit={handleSubmit(onSubmit, onError)}
       className="flex flex-col gap-2"
     >
-      <Field
+      <TextField
         name="email"
-        children={({ state, handleChange, handleBlur }) => (
-          <TextField
-            type="email"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={state.value}
-          >
-            <Label>Email</Label>
-            <Input placeholder={EMAIL_PLACEHOLDER} />
-            <FieldError />
-          </TextField>
-        )}
-      />
-      <Field
+        isInvalid={!!formState.errors.email}
+        className="w-full"
+      >
+        <Label>Email:</Label>
+        <Input
+          type="email"
+          {...register("email")}
+          placeholder={EMAIL_PLACEHOLDER}
+        />
+        <FieldError>{formState.errors.email?.message}</FieldError>
+      </TextField>
+      <TextField
         name="password"
-        children={({ state, handleChange, handleBlur }) => (
-          <TextField
-            type="password"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={state.value}
-          >
-            <Label>Password</Label>
-            <Input />
-            <FieldError />
-          </TextField>
-        )}
-      />
-      <div className="flex gap-2">
-        <Button type="submit">
-          <Check />
-          Submit
-        </Button>
-        <Button type="reset" variant="secondary">
-          Reset
-        </Button>
-      </div>
+        isInvalid={!!formState.errors.password}
+        onChange={() => {
+          if (formState.touchedFields.passwordConfirmation) {
+            form.clearErrors("passwordConfirmation");
+            form.trigger("passwordConfirmation");
+          }
+        }}
+        className="w-full"
+      >
+        <Label>Password:</Label>
+        <Input
+          // type="password"
+          {...register("password")}
+        />
+        <FieldError>{formState.errors.password?.message}</FieldError>
+      </TextField>
+      <TextField
+        name="passwordConfirmation"
+        isInvalid={!!formState.errors.passwordConfirmation}
+        className="w-full"
+      >
+        <Label>Confirm Password:</Label>
+        <Input type="password" {...register("passwordConfirmation")} />
+        <FieldError>
+          {formState.errors.passwordConfirmation?.message}
+        </FieldError>
+      </TextField>
+      <Button type="submit" isPending={formState.isSubmitting}>
+        <Check />
+        Submit
+      </Button>
     </Form>
   );
 }

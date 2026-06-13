@@ -8,7 +8,7 @@ export function ThemeSwitch() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="flex flex-row gap-0 self-end">
+    <div className="flex flex-row gap-0 self-end radius-none">
       <ToggleButton
         isSelected={theme === "light"}
         onPress={() => setTheme("light")}
